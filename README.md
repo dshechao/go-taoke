@@ -1,4 +1,4 @@
-# 淘宝联盟，京东联盟基础api请求包
+#淘宝客 淘宝联盟，京东联盟基础api请求包
 淘宝客,京东Api、淘宝开放平台Api,京东联盟请求基础SDK
 
 # 淘宝API
@@ -7,18 +7,19 @@
 
 [淘宝Session](https://oauth.taobao.com/authorize?response_type=token&client_id=24840730)
 
-# Example 
+# Example-Taobao 
 ```go
 package main
 
 import (
 	"fmt"
-	 "gitee.com/vblant/go-taoke"
+	"github.com/dshechao/go-taoke"
 )
 
 func init() {
 	taoke.AppKey = ""
 	taoke.AppSecret = ""
+    taoke.Platform = "1"
 	taoke.Router = "http://gw.api.taobao.com/router/rest"
 }
 
@@ -44,5 +45,39 @@ func main() {
 		fmt.Println("商品链接:", item["item_url"])
 	}
 }
+
+```
+
+# Example - JingDong
+```go
+package main
+
+import (
+	"github.com/dshechao/go-taoke"
+	"log"
+)
+
+func init() {
+	taoke.AppKey = ""
+	taoke.AppSecret = ""
+    taoke.Router ="https://router.jd.com/api"
+	taoke.V = "1.0"
+	taoke.Platform = "2"
+}
+
+func main() {
+
+	result, err := taoke.Execute("jd.union.open.goods.jingfen.query1", taoke.Parameter{
+		"goodsReq":taoke.Parameter{"eliteId":    "1"},
+	})
+
+	if err != nil {
+		log.Printf("execute error:%s\n", err)
+		return
+	}
+	data, _ := result.MarshalJSON()
+	log.Printf("result:%s\n", data)
+}
+
 
 ```

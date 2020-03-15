@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitee.com/vblant/go-taoke"
+	"github.com/dshechao/go-taoke"
 	"log"
 	"os"
 	"time"
@@ -10,6 +10,9 @@ import (
 func init() {
 	taoke.AppKey = os.Getenv("OPEN_TAOBAO_APPKEY")
 	taoke.AppSecret = os.Getenv("OPEN_TAOBAO_APPSECRET")
+	taoke.Router = "https://router.jd.com/api"
+	taoke.V = "1.0"
+	taoke.Platform = "2"
 	taoke.GetCache = func(cacheKey string) []byte {
 		return nil
 	}
@@ -20,15 +23,8 @@ func init() {
 
 func main() {
 
-	result, err := taoke.Execute("taobao.tbk.relation.refund", taoke.Parameter{
-		"search_option": map[string]interface{}{
-			"page_size":   1,
-			"search_type": 4, // 1-维权发起时间，2-订单结算时间（正向订单），3-维权完成时间，4-订单创建时间
-			"refund_type": 1, // 1 表示2方，2表示3方
-			"start_time":  "2019-07-08 00:00:00",
-			"page_no":     1,
-			"biz_type":    1,
-		},
+	result, err := taoke.Execute("jd.union.open.goods.jingfen.query", taoke.Parameter{
+		"goodsReq": taoke.Parameter{"eliteId": "1"},
 	})
 
 	if err != nil {

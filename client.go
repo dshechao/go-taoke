@@ -18,7 +18,7 @@ import (
 
 	"github.com/bitly/go-simplejson"
 
-	"gitee.com/vblant/go-taoke/cache"
+	"github.com/dshechao/go-taoke/cache"
 	"github.com/nilorg/sdk/convert"
 )
 
@@ -114,11 +114,10 @@ func execute(param Parameter) (bytes []byte, err error) {
 
 // Execute 执行API接口
 func Execute(method string, param Parameter) (res *simplejson.Json, err error) {
-	param["method"] = method
-	param.setRequestData()
+	p := setRequestData(param, method)
 
 	var bodyBytes []byte
-	bodyBytes, err = execute(param)
+	bodyBytes, err = execute(p)
 	if err != nil {
 		return
 	}
@@ -131,10 +130,11 @@ func bytesToResult(bytes []byte) (res *simplejson.Json, err error) {
 	if err != nil {
 		return
 	}
-
 	if responseError, ok := res.CheckGet("error_response"); ok {
 		if subMsg, subOk := responseError.CheckGet("sub_msg"); subOk {
 			err = errors.New(subMsg.MustString())
+		} else if zhDesc, descOk := responseError.CheckGet("zh_desc"); descOk {
+			err = errors.New(zhDesc.MustString())
 		} else {
 			err = errors.New(responseError.Get("msg").MustString())
 		}
@@ -145,10 +145,9 @@ func bytesToResult(bytes []byte) (res *simplejson.Json, err error) {
 
 // ExecuteCache 执行API接口，缓存
 func ExecuteCache(method string, param Parameter) (res *simplejson.Json, err error) {
-	param["method"] = method
-	param.setRequestData()
+	p := setRequestData(param, method)
 
-	cacheKey := newCacheKey(param)
+	cacheKey := newCacheKey(p)
 	// 获取缓存
 	if GetCache != nil {
 		cacheBytes := GetCache(cacheKey)
@@ -194,25 +193,30 @@ func checkConfig() error {
 	return nil
 }
 
-//添加公共参数
-func (p Parameter) setRequestData() {
+//组装参数及添加公共参数
+func setRequestData(p Parameter, method string) Parameter {
 	hh, _ := time.ParseDuration("8h")
 	loc := time.Now().UTC().Add(hh)
 	if Platform == "2" {
+		param := p
+		p = Parameter{}
+		p["param_json"] = param
 		p["timestamp"] = loc.Format("2006-01-02 15:04:05")
 	} else {
 		p["timestamp"] = strconv.FormatInt(loc.Unix(), 10)
+		p["partner_id"] = "Blant"
 	}
+	p["method"] = method
 	p["format"] = "json"
 	p["app_key"] = AppKey
 	p["v"] = V
 	p["sign_method"] = "md5"
-	p["partner_id"] = "Blant"
 	if Session != "" {
 		p["session"] = Session
 	}
 	// 设置签名
 	p["sign"] = getSign(p)
+	return p
 }
 
 // 获取请求数据
