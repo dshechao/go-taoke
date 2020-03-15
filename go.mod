@@ -1,4 +1,4 @@
-module gitee.com/vblant/go-taoke
+module github.com/dshechao/go-taoke
 
 require (
 	github.com/bitly/go-simplejson v0.5.0
