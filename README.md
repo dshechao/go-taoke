@@ -19,7 +19,7 @@ import (
 func init() {
 	taoke.AppKey = ""
 	taoke.AppSecret = ""
-    taoke.Platform = "1"
+        taoke.Platform = "1"
 	taoke.Router = "http://gw.api.taobao.com/router/rest"
 }
 
@@ -60,7 +60,7 @@ import (
 func init() {
 	taoke.AppKey = ""
 	taoke.AppSecret = ""
-    taoke.Router ="https://router.jd.com/api"
+        taoke.Router ="https://router.jd.com/api"
 	taoke.V = "1.0"
 	taoke.Platform = "2"
 }
@@ -95,7 +95,7 @@ func init() {
 	taoke.AppSecret = "client_secret"
 	taoke.Router = "https://gw-api.pinduoduo.com/api/router"
 	taoke.Platform = "3"
-    taoke.V = "1.0"
+        taoke.V = "1.0"
 }
 
 func main() {
