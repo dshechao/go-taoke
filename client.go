@@ -23,7 +23,7 @@ import (
 )
 
 var (
-	// 请求平台(1=taobao,2=jingdong.默认1)
+	// 请求平台(1=淘宝,2=京东,3=拼多多,4=考拉赚客)
 	Platform string
 	// AppKey 应用Key
 	AppKey string
@@ -197,23 +197,38 @@ func checkConfig() error {
 func setRequestData(p Parameter, method string) Parameter {
 	hh, _ := time.ParseDuration("8h")
 	loc := time.Now().UTC().Add(hh)
-	if Platform == "2" {
-		param := p
-		p = Parameter{}
-		p["param_json"] = param
+	if Platform == "3" {
+		p["type"] = method
+		p["data_type"] = "json"
+		p["client_id"] = AppKey
+		p["timestamp"] = strconv.FormatInt(loc.Unix(), 10)
+	} else if Platform == "4" {
+		p["method"] = method
+		p["v"] = V
+		p["signMethod"] = "md5"
+		p["unionId"] = AppKey
 		p["timestamp"] = loc.Format("2006-01-02 15:04:05")
 	} else {
-		p["timestamp"] = strconv.FormatInt(loc.Unix(), 10)
-		p["partner_id"] = "Blant"
+		if Platform == "2" {
+			param := p
+			p = Parameter{}
+			p["param_json"] = param
+			p["timestamp"] = loc.Format("2006-01-02 15:04:05")
+		} else {
+			p["timestamp"] = strconv.FormatInt(loc.Unix(), 10)
+			p["partner_id"] = "Blant"
+			if Session != "" {
+				p["session"] = Session
+			}
+		}
+		p["method"] = method
+		p["format"] = "json"
+		p["app_key"] = AppKey
+		p["v"] = V
+		p["sign_method"] = "md5"
+
 	}
-	p["method"] = method
-	p["format"] = "json"
-	p["app_key"] = AppKey
-	p["v"] = V
-	p["sign_method"] = "md5"
-	if Session != "" {
-		p["session"] = Session
-	}
+
 	// 设置签名
 	p["sign"] = getSign(p)
 	return p

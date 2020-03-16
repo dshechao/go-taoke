@@ -81,3 +81,70 @@ func main() {
 
 
 ```
+# Example - 多多进宝
+```go
+package main
+
+import (
+	"github.com/dshechao/go-taoke"
+	"log"
+)
+
+func init() {
+	taoke.AppKey = "client_id"
+	taoke.AppSecret = "client_secret"
+	taoke.Router = "https://gw-api.pinduoduo.com/api/router"
+	taoke.Platform = "3"
+    taoke.V = "1.0"
+}
+
+func main() {
+
+	result, err := taoke.Execute("pdd.ddk.goods.search", taoke.Parameter{
+    		"keyword":"华为手机",
+    	})
+
+	if err != nil {
+		log.Printf("execute error:%s\n", err)
+		return
+	}
+	data, _ := result.MarshalJSON()
+	log.Printf("result:%s\n", data)
+}
+
+
+```
+# Example - 考拉赚客
+```go
+package main
+
+import (
+	"github.com/dshechao/go-taoke"
+	"log"
+)
+
+func init() {
+    taoke.AppKey = "赚客ID"
+    taoke.AppSecret = "AppSecret"
+    taoke.Router = "https://cps.kaola.com/zhuanke/api"
+    taoke.Platform = "4"
+    taoke.V = "1.0"
+}
+
+func main() {
+
+	result, err := taoke.Execute("kaola.zhuanke.api.queryRecommendGoodsList", taoke.Parameter{
+    		"sortType":1,
+    		"pageIndex":1,
+    	})
+
+	if err != nil {
+		log.Printf("execute error:%s\n", err)
+		return
+	}
+	data, _ := result.MarshalJSON()
+	log.Printf("result:%s\n", data)
+}
+
+
+```

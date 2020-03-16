@@ -10,9 +10,10 @@ import (
 func init() {
 	taoke.AppKey = os.Getenv("OPEN_TAOBAO_APPKEY")
 	taoke.AppSecret = os.Getenv("OPEN_TAOBAO_APPSECRET")
-	taoke.Router = "https://router.jd.com/api"
+	taoke.Router = "https://cps.kaola.com/zhuanke/api"
 	taoke.V = "1.0"
-	taoke.Platform = "2"
+	taoke.Platform = "4"
+
 	taoke.GetCache = func(cacheKey string) []byte {
 		return nil
 	}
@@ -23,8 +24,9 @@ func init() {
 
 func main() {
 
-	result, err := taoke.Execute("jd.union.open.goods.jingfen.query", taoke.Parameter{
-		"goodsReq": taoke.Parameter{"eliteId": "1"},
+	result, err := taoke.Execute("kaola.zhuanke.api.queryRecommendGoodsList", taoke.Parameter{
+		"sortType":  1,
+		"pageIndex": 1,
 	})
 
 	if err != nil {
