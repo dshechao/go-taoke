@@ -3,34 +3,27 @@ package main
 import (
 	"github.com/dshechao/go-taoke"
 	"log"
-	"os"
-	"time"
 )
 
 func init() {
-	taoke.AppKey = os.Getenv("OPEN_TAOBAO_APPKEY")
-	taoke.AppSecret = os.Getenv("OPEN_TAOBAO_APPSECRET")
-	taoke.Router = "https://cps.kaola.com/zhuanke/api"
-	taoke.V = "1.0"
-	taoke.Platform = "4"
+	taoke.AppKeyJingDong = ""
+	taoke.AppSecretJingDong = ""
+	taoke.VersionJingDong = "1.0"
+	taoke.RouterJingDong = "https://router.jd.com/api"
 
-	taoke.GetCache = func(cacheKey string) []byte {
-		return nil
-	}
-	taoke.SetCache = func(cacheKey string, value []byte, expiration time.Duration) bool {
-		return true
-	}
 }
 
 func main() {
 
-	result, err := taoke.Execute("kaola.zhuanke.api.queryRecommendGoodsList", taoke.Parameter{
-		"sortType":  1,
-		"pageIndex": 1,
-	})
+	method := "jd.union.open.goods.jingfen.query"
+	param := taoke.Parameter{}
+	param["goodsReq"] = taoke.Parameter{
+		"eliteId": 1,
+	}
+	result, err := taoke.Execute(method, param)
 
 	if err != nil {
-		log.Printf("execute error:%s\n", err)
+		log.Println(err)
 		return
 	}
 	data, _ := result.MarshalJSON()

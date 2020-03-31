@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	AppKey = ""
-	AppSecret = ""
-	Router = "http://gw.api.taobao.com/router/rest"
+	AppKeyTaobao = ""
+	AppSecretTaobao = ""
+	RouterTaobao = "http://gw.api.taobao.com/router/rest"
 	GetCache = func(cacheKey string) []byte {
 		log.Printf("GetCache key:%s\n", cacheKey)
 		//return nil
